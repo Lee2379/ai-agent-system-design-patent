@@ -32,7 +32,7 @@
 | Patent number | 2025/09550 |
 | Publication number | ZA202509550B |
 | Filing / priority date | 11 November 2025 |
-| Grant / registration date | 28 January 2026, as provided by the inventor |
+| Grant / registration date | 28 January 2026|
 | Publication date | 28 January 2026, indexed by Google Patents |
 
 ## Invention at a glance
