@@ -1,0 +1,133 @@
+Field of the Invention:
+This invention relates to the field of Artificial Intelligence (AI) and autonomous drone
+technology. Specifically, it describes how AI and autonomous drone systems can address
+logistics and delivery challenges in East Asian countries focused on South Korea, Japan,
+and China.
+This invention provides a smart drone delivery system which utilizes a multi-agent AI
+framework, satellite communication, and GPS-based tracking to enable safe, efficient, and
+environmentally sustainable delivery operations across regions in South Korea, Japan, and
+China. The system integrates hierarchical and network AI agents to manage drone
+operations, optimize routing, monitor safety, and communicate with users in real time.
+
+Background:
+Current delivery systems in East Asian countries depend heavily on human drivers and
+vehicles powered by fossil fuels, which are neither cost-efficient nor environmentally
+sustainable. These traditional systems result in high operational costs, contributing to
+carbon emissions, and often fail to reach customers in geographically difficult areas such
+as mountainous, rural areas.
+
+In East Asian countries, the combination of dense urban centers and complex terrain
+further increases delivery challenges. Large portions of South Korea are mountainous,
+while Japan’s dispersed geography makes human-based delivery labor-intensive and
+expensive. In China, there is also a need for autonomous delivery systems to enhance
+delivery efficiency. Additionally, due to an ongoing labor shortage, these countries lack
+sufficient human resources to provide cost-efficient delivery services to suburban and
+rural areas.
+Despite few drone delivery systems have been previously developed, most lack
+autonomous adaptability, real-time coordination, and scalable AI management, which are
+core aspects of autonomous delivery system. They rely mainly on centralized control
+systems without intelligent decision-making capabilities at the drone or agent level. Thus,
+their efficiency and reliability are limited in dynamic real-world logistics environments.
+To address these limitations, this invention proposes a multi-agent AI-based drone
+delivery system capable of learning, coordinating, and performing delivery tasks
+autonomously, which are cardinal facet of autonomous delivery system. This invention
+aims to reduce costs, save time, alleviate traffic congestion, and promote environmentally
+friendly logistics through the use of AI coordination and electric-powered drones in
+South Korea, Japan, and China.
+
+Summary of the Invention:
+The invention provides a smart drone delivery system that integrates AI agents, satellite
+communication, and GPS to manage autonomous delivery operations. The system
+employs a multi-agent structure consisting of:
+ Hierarchical AI Agents, responsible for overall control, scheduling, and
+coordination of drone fleets.
+ Network AI Agents, responsible for real-time communication, data exchange, and
+cooperation among drones and customers.
+System Operation:
+1. A customer places an order via a connected delivery platform.
+2. The AI agent determines the customer’s real-time location and assigns an
+available drone.
+3. The drone navigates autonomously using GPS and satellite communication with
+
+continuous guidance from the AI agent.
+4. Approximately five minutes before arrival, the AI agent sends a text or
+application-based alert notifying the customer of the incoming delivery.
+5. The parcel can be safely received at a pre-defined drop-off location such as a
+ground-level delivery zone or designated window.
+6. All operational data - including flight paths, sensor readings, and images - are
+stored and reused to improve AI performance. These data can also be utilized in
+autonomous driving, air taxi, and transportation systems for the future.
+Key Advantages:
+ Cost reduction through automation and elimination of delivery fees.
+ Time efficiency from optimized routing and autonomous control.
+ Eco-friendly operation using electric power instead of fossil fuels.
+ Accessibility to mountainous, rural areas in South Korea and Japan.
+
+Detailed Description:
+System Architecture:
+The system comprises a central AI control server linked to autonomous drones equipped
+with GPS, sensors, cameras, and communication modules. The control server coordinates
+operations through hierarchical AI agents that manage tasks and network agents that
+facilitate inter-drone communication.
+AI Agent Operation:
+Each AI agent employs deep learning algorithms for path optimization, obstacle
+avoidance, and dynamic route updates based on traffic, weather, and environmental
+data. The agents learn continuously from historical delivery information to improve
+accuracy and efficiency.
+Communication Framework:
+The system utilizes satellite communication to ensure high precision and stability.
+Network agents manage continuous data exchange between drones, the control center,
+and customers for seamless delivery management. Also, for security, the satellite
+communication system uses encrypted, authenticated, and quantum-resistant
+cryptographic protocols to reduce vulnerability to interference and spoofing, ensuring
+
+secure, reliable drone operations and protecting data against network threats.
+Product Delivery Process:
+1. The AI system receives a delivery request and determines the optimal drone and
+flight path.
+2. The assigned drone receives GPS coordinates and maintains real-time
+communication with the AI agent.
+3. Five minutes before arrival, the AI agent automatically sends a notification
+message to the customer. The drone autonomously delivers the package to the
+designated location.
+Learning and Optimization:
+Data collected during each delivery - including images, flight paths, and sensor data -
+are processed by the AI system to enhance navigation accuracy, energy efficiency, and
+predictive logistics planning. These data are stored in a secure, encrypted cloud
+database.
+Applications and Extensions:
+The system can also be applied to medical supply transport, disaster relief logistics, and
+urban air mobility systems such as air taxis. The modular multi-agent design allows
+scalability and integration with future intelligent transportation infrastructure.
+Safety Considerations:
+Safety is prioritized through redundancy in communication links, automatic obstacle
+avoidance, and continuous monitoring. Each drone is equipped with object-detection
+sensors enabling it to detect nearby humans or vehicles and automatically adjust its
+flight path to prevent collisions. Drones are also programmed to return to base or land
+safely in the event of power failure or communication loss.
+
+Claims:
+An AI-based drone delivery system comprising:
+ One or more drones equipped with GPS, sensors, and communication modules;
+and
+ AI agents configured to manage autonomous deliveries using satellite
+
+communication.
+The system of claim 1, wherein hierarchical AI agents coordinate drone scheduling and
+routing.
+The system of claim 1, wherein network AI agents manage real-time communication
+between drones and customers.
+The system of claim 1, wherein the AI agent sends an automatic delivery alert to the
+customer prior to arrival.
+The system of claim 1, wherein operational data are used for further improvements in
+the future and the drones operate using electric power.
+
+Abstract:
+An AI-based smart drone delivery system utilizing multi-agent technology, satellite
+communication, and GPS tracking for autonomous parcel delivery for industry. The
+invention features hierarchical and network AI agents that manage drone operations,
+optimize routing, and ensure real-time communication with customers. This system
+achieves cost savings, reduced emissions, and enhanced accessibility to urban and
+remote areas in South Korea, Japan, and China.
+
+End of Specification
