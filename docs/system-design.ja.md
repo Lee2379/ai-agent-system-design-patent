@@ -11,7 +11,7 @@
 - **原文の設計:** 提供された明細書に記載された動作。
 - **実装上の検討事項:** 動作を具体化するための技術的な提案。ポートフォリオとしての分析であり、元の発明の請求項に追加したものではありません。
 
-![システム構成](../assets/architecture-ja.svg)
+![システム構成](../assets/fig-01-system-architecture-ja.svg)
 
 ## 2. 責任の境界
 
@@ -26,35 +26,9 @@
 
 ## 3. 概念的な処理シーケンス
 
-![エージェントの連携](../assets/agent-coordination-ja.svg)
+![エージェントの連携](../assets/fig-02-agent-coordination-ja.svg)
 
-以下は原文の配送フローを整理した概念図です。具体的なAPIや、エージェントの物理的な配置場所を定めるものではありません。
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Customer as 顧客
-    participant Platform as 配送プラットフォーム
-    participant Fleet as 階層型AIエージェント
-    participant Network as ネットワーク型AIエージェント
-    participant Drone as 自律型ドローン
-    participant Data as 運用データストア
-    Customer->>Platform: 配送を注文
-    Platform->>Fleet: 配送要求と目的地
-    Fleet->>Network: 機体割当と経路情報
-    Network->>Drone: 通信層を通じたミッション情報
-    loop 飛行中
-        Drone->>Network: 位置と運用状態
-        Network->>Fleet: 調整に必要な情報
-        Fleet->>Network: 必要に応じた誘導更新
-        Network->>Drone: 更新された誘導
-    end
-    Network->>Platform: 到着前通知
-    Platform->>Customer: 到着約5分前の通知
-    Drone->>Customer: 指定地点での荷物の受け渡し
-    Drone->>Data: 通信層を通じた運用記録
-    Data-->>Fleet: その後のAI改善用データ
-```
+図2は原文の配送フローを整理した概念図です。具体的なAPIや、エージェントの物理的な配置場所を定めるものではありません。
 
 データの保存経路や到着時刻を計算する構成要素は原文では指定されていません。図では理解しやすい単位にまとめています。
 
@@ -74,7 +48,7 @@ sequenceDiagram
 
 ## 5. 異常時の動作
 
-![異常時の動作と実装条件](../assets/safety-responses-ja.svg)
+![異常時の動作と実装条件](../assets/fig-05-safety-responses-ja.svg)
 
 原文には、通信の冗長化、障害物回避、監視、帰還、安全な着陸が記載されています。実装では、各動作を実行できる条件を具体化します。
 
@@ -105,7 +79,7 @@ sequenceDiagram
 
 ## 7. 学習サイクル
 
-![運用データと学習サイクル](../assets/learning-cycle-ja.svg)
+![運用データと学習サイクル](../assets/fig-06-learning-flow-ja.svg)
 
 **原文の設計:** 運用データを収集・保存し、航行精度、エネルギー効率、物流計画の改善に利用します。
 

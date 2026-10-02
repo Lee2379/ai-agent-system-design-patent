@@ -1,135 +1,208 @@
-"""Build bilingual, source-aligned SVG illustrations with Python's standard library."""
-from pathlib import Path
+"""Build bilingual explanatory drawings with Python's standard library.
+
+Reference numerals are editorial aids, not numbers from filed patent drawings.
+The figures describe functional relationships, not mechanical construction.
+"""
 from html import escape
+from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / 'assets'
-NAVY, INK, MUTED = '#10283f', '#17344d', '#536d81'
-TEAL, BLUE, GOLD = '#087f83', '#4668c8', '#ac6b17'
-PALE, BORDER = '#f4f7fa', '#d5e1e8'
-FONT = "'Segoe UI', 'Yu Gothic', Meiryo, sans-serif"
+OUT = Path(__file__).resolve().parents[1] / 'assets'
+FONT = "Arial, 'Yu Gothic', Meiryo, sans-serif"
 
-def tx(x, y, value, size=20, color=INK, weight=400, anchor='start'):
-    return f'<text x="{x}" y="{y}" font-family="{FONT}" font-size="{size}" fill="{color}" font-weight="{weight}" text-anchor="{anchor}">{escape(value)}</text>'
 
-def rect(x, y, w, h, fill='white', stroke=BORDER, radius=14):
-    return f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{radius}" fill="{fill}" stroke="{stroke}"/>'
+def text(x, y, value, size=22, anchor='middle', bold=False):
+    return (f'<text x="{x}" y="{y}" font-family="{FONT}" font-size="{size}" '
+            f'text-anchor="{anchor}" font-weight="{600 if bold else 400}" '
+            f'fill="#111">{escape(value)}</text>')
 
-def path(d, color=TEAL, width=2.5, dashed=False, arrow=False):
-    return f'<path d="{d}" fill="none" stroke="{color}" stroke-width="{width}" stroke-linecap="round" stroke-linejoin="round"'+(' stroke-dasharray="7 7"' if dashed else '')+(f' marker-end="url(#{color[1:]})"' if arrow else '')+'/>'
 
-def circle(x,y,r,fill,stroke='none'):
-    return f'<circle cx="{x}" cy="{y}" r="{r}" fill="{fill}" stroke="{stroke}"/>'
+def lines(x, y, values, size=22, step=31, **kwargs):
+    return ''.join(text(x, y + i * step, v, size, **kwargs) for i, v in enumerate(values))
 
-def textlines(x,y,lines,size=19,color=MUTED,step=29):
-    return ''.join(tx(x,y+i*step,v,size,color) for i,v in enumerate(lines))
 
-def icon(kind, x, y, scale=1, color=TEAL):
-    shapes={
-      'drone':'<path d="M-26 -18 L26 18 M-26 18 L26 -18"/><rect x="-12" y="-9" width="24" height="18" rx="5"/><ellipse cx="-29" cy="-20" rx="18" ry="6"/><ellipse cx="29" cy="-20" rx="18" ry="6"/><ellipse cx="-29" cy="20" rx="18" ry="6"/><ellipse cx="29" cy="20" rx="18" ry="6"/><path d="M-7 11 V28 H7 V11"/>',
-      'warehouse':'<path d="M-40 4 L0 -24 L40 4 V48 H-40 Z M-17 48 V10 H17 V48 M-40 0 H40"/>',
-      'home':'<path d="M-25 0 L0 -24 L25 0 V32 H-25 Z M-7 32 V10 H7 V32"/>',
-      'city':'<path d="M-38 36 V-8 H-10 V36 M-10 36 V-38 H24 V36 M24 36 V3 H43 V36 M-28 3 H-20 M-28 16 H-20 M1 -24 H12 M1 -10 H12 M1 4 H12 M1 18 H12 M-44 36 H49"/>',
-      'satellite':'<rect x="-10" y="-12" width="20" height="24" rx="3"/><path d="M-10 -8 H-42 V8 H-10 M10 -8 H42 V8 H10 M-28 -8 V8 M28 -8 V8 M0 12 V27 M-13 18 Q0 39 13 18"/>',
-      'database':'<ellipse cx="0" cy="-20" rx="27" ry="9"/><path d="M-27 -20 V25 C-27 38 27 38 27 25 V-20 M-27 -4 C-27 9 27 9 27 -4 M-27 11 C-27 24 27 24 27 11"/>',
-      'shield':'<path d="M0 -32 L28 -20 V3 Q28 23 0 38 Q-28 23 -28 3 V-20 Z M-13 0 L-3 11 L15 -9"/>',
-      'signal':'<path d="M-30 -12 Q0 -40 30 -12 M-20 0 Q0 -20 20 0 M-10 12 Q0 1 10 12"/><circle cx="0" cy="25" r="3"/>',
-      'battery':'<rect x="-32" y="-18" width="58" height="36" rx="5"/><path d="M27 -8 H34 V8 H27 M-23 -10 V10 M-17 -10 V10"/>',
-      'obstacle':'<path d="M0 -31 L34 28 H-34 Z M0 -10 V8 M0 17 V19"/>',
-      'model':'<circle cx="0" cy="0" r="9"/><circle cx="-28" cy="-22" r="6"/><circle cx="28" cy="-22" r="6"/><circle cx="-28" cy="24" r="6"/><circle cx="28" cy="24" r="6"/><path d="M-8 -6 L-22 -17 M8 -6 L22 -17 M-8 6 L-22 19 M8 6 L22 19"/>',
-      'check':'<rect x="-25" y="-30" width="50" height="60" rx="5"/><path d="M-13 -10 L-6 -3 L7 -17 M-12 11 H13 M-12 20 H5"/>',
-    }
-    return f'<g transform="translate({x} {y}) scale({scale})" stroke="{color}" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round">{shapes[kind]}</g>'
+def rect(x, y, w, h, dashed=False):
+    return (f'<rect x="{x}" y="{y}" width="{w}" height="{h}" '
+            f'fill="white" stroke="#111" stroke-width="1.8"'
+            + (' stroke-dasharray="9 6"' if dashed else '') + '/>')
 
-def base(h, eyebrow, title, subtitle, ja):
-    definitions=''.join(f'<marker id="{c[1:]}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="{c}"/></marker>' for c in [TEAL,BLUE,GOLD,MUTED])
-    return f'<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="{h}" viewBox="0 0 1280 {h}" role="img" aria-labelledby="title desc" lang="'+('ja' if ja else 'en')+f'"><title id="title">{escape(title)}</title><desc id="desc">{escape(subtitle)}</desc><defs>{definitions}</defs>'+rect(1,1,1278,h-2,PALE,BORDER,20)+tx(40,43,eyebrow,15,TEAL,700)+tx(40,88,title,32,INK,700)+tx(40,123,subtitle,18,MUTED)
 
-def save(stem,ja,s):
-    (OUT/f'{stem}-{"ja" if ja else "en"}.svg').write_text(s+'</svg>',encoding='utf-8',newline='\n')
+def line(d, arrow=False, both=False, dashed=False):
+    return (f'<path d="{d}" fill="none" stroke="#111" stroke-width="1.8" stroke-linejoin="miter"'
+            + (' marker-end="url(#arrow)"' if arrow or both else '')
+            + (' marker-start="url(#start)"' if both else '')
+            + (' stroke-dasharray="7 6"' if dashed else '') + '/>')
 
-def context(ja):
-    s=base(760,'01 / APPLICATION CONTEXT', '都市・山間部・農村部をつなぐ自律配送' if ja else 'One delivery system. Different operating environments.', '顧客の注文、AIによる調整、自律航行、指定地点での受け取りを一つの流れに。' if ja else 'Connect customer requests, AI coordination, autonomous navigation, and a designated handoff.',ja)
-    s+=rect(32,153,1216,390,'#edf4f7',BORDER,16)
-    # Terrain is illustrative, with no real coordinates or service coverage claims.
-    s+='<path d="M34 481 L235 378 L349 440 L540 261 L670 402 L770 336 L940 486 V541 H34Z" fill="#d9e6e9"/><path d="M349 440 L540 261 L595 354 L553 338 L533 369 L509 341Z" fill="#f9fcfd"/><path d="M35 504 Q256 462 421 495 T778 492 T1246 510 V542 H35Z" fill="#cddfdc"/>'
-    s+=path('M54 519 Q278 482 443 512 T780 517 T1230 520','#b0c9c9',3)
-    s+=icon('warehouse',142,412,1.1,NAVY)+icon('city',1087,327,1.22,NAVY)+icon('home',1033,451,.88,NAVY)+icon('home',1125,465,.75,NAVY)
-    s+=path('M180 410 C345 270 717 173 1036 301',TEAL,3,True,True)
-    s+=path('M719 272 Q899 344 990 435',TEAL,3,True,True)
-    s+=icon('drone',681,265,1.16,TEAL)+icon('satellite',394,208,.76,BLUE)
-    s+=tx(337,181,'衛星通信' if ja else 'Satellite link',16,BLUE,600)
-    s+=tx(620,325,'GPS・センサー' if ja else 'GPS + sensors',16,TEAL,600)
-    s+=path('M415 233 Q502 247 624 261',BLUE,2,True)
-    s+=rect(58,179,228,96,'white',BORDER,12)+tx(76,211,'AI制御サーバー' if ja else 'AI control server',20,INK,650)+tx(76,242,'計画・通信・調整' if ja else 'Plan · connect · coordinate',16,MUTED)
-    s+=path('M174 276 V350',BLUE,2,True)
-    s+=rect(879,179,323,91,'white',BORDER,12)+tx(897,212,'到着前通知' if ja else 'Pre-arrival notification',21,INK,650)+tx(897,243,'到着の約5分前に顧客へ' if ja else 'Customer alert ~5 min before arrival',16,MUTED)
-    s+=tx(66,499,'配送拠点' if ja else 'Dispatch base',18,INK,650)
-    s+=tx(493,461,'地形に応じた経路計画' if ja else 'Terrain-aware routing',18,MUTED)
-    s+=tx(1019,398,'指定受取地点' if ja else 'Delivery points',18,INK,650)
-    labels=[('都市部','配送地点と周囲の障害物を考慮'),('山間部','地形と環境の変化に応じて調整'),('農村部','分散した配送先へのアクセス')] if ja else [('Urban areas','Defined handoff points and obstacles'),('Mountainous areas','Routes shaped by terrain and conditions'),('Rural communities','Access to dispersed destinations')]
-    for i,(title,body) in enumerate(labels):
-        x=32+i*411
-        s+=rect(x,565,394,116)+tx(x+20,600,f'0{i+1}',16,TEAL,700)+tx(x+63,600,title,22,INK,650)+tx(x+20,636,body,17,MUTED)
-    s+=tx(40,722,'明細書に基づく概念図。地理的な配置と飛行経路は説明用です。',16,MUTED) if ja else tx(40,722,'Concept illustration based on the specification. Geography and flight paths are illustrative.',16,MUTED)
-    save('delivery-context',ja,s)
 
-def coordination(ja):
-    s=base(864,'03 / AGENT COORDINATION','役割を分け、判断と情報をつなぐ' if ja else 'Separate responsibilities. Connected decisions.', '配送依頼から経路の更新、到着通知までの概念的な情報の流れ。' if ja else 'A conceptual interaction between the customer, fleet coordination, network agents, and drone.',ja)
-    centers=[185,490,795,1100]
-    names=['顧客プラットフォーム','階層型AI','ネットワーク型AI','自律型ドローン'] if ja else ['Customer platform','Hierarchical AI','Network AI','Autonomous drone']
-    descs=['依頼・受け取り','割当・経路の判断','通信・情報の共有','飛行・周囲の検知'] if ja else ['Request and receive','Assign and route','Exchange and coordinate','Navigate and sense']
-    colors=[MUTED,BLUE,TEAL,GOLD]
-    for x,n,d,c in zip(centers,names,descs,colors):
-        s+=rect(x-136,157,272,88,'white',BORDER,12)+tx(x,191,n,21,c,650,'middle')+tx(x,223,d,16,MUTED,400,'middle')
-        s+=path(f'M{x} 248 V695','#c6d4dd',1.5,True)
-    rows=[(0,1,'配送依頼と目的地' if ja else 'Request + destination',BLUE),(1,2,'機体割当と経路' if ja else 'Assignment + route',BLUE),(2,3,'ミッション情報' if ja else 'Mission information',TEAL),(3,2,'位置・状態の報告' if ja else 'Position + status',GOLD),(2,1,'調整用の情報' if ja else 'Coordination data',TEAL),(1,3,'ネットワーク型AIを介した誘導更新' if ja else 'Guidance update through network agents',BLUE),(2,0,'到着前通知（約5分前）' if ja else 'Pre-arrival alert (~5 min)',TEAL)]
-    for i,(a,b,label,c) in enumerate(rows):
-        y=290+i*61
-        x1,x2=centers[a],centers[b]
-        s+=circle(x1,y,4,c)+path(f'M{x1} {y} H{x2}',c,2.5,False,True)
-        cx=(x1+x2)/2
-        # Put an opaque backing under each label so lane guides never run through text.
-        width=(len(label)*10 if not ja else len(label)*18)+24
-        s+=rect(cx-width/2,y-34,width,27,PALE,PALE,4)+tx(cx,y-13,label,17,INK,500,'middle')
-    s+=rect(49,724,1182,73,'#e7f3f2','#bfdcd8',12)+tx(71,755,'判断 → 共有 → 実行 → フィードバック' if ja else 'Decide → share → execute → report back',22,TEAL,650)+tx(71,782,'通信方式やエージェントの物理的配置は、実装時に定義します。' if ja else 'The specification leaves protocols and the physical placement of agents to implementation.',16,MUTED)
-    s+=tx(40,837,'説明用のシーケンス。実機で測定した通信履歴ではありません。' if ja else 'Illustrative sequence derived from the specification; no measured flight or communication trace is implied.',16,MUTED)
-    save('agent-coordination',ja,s)
+def block(x, y, w, h, ref, labels, size=22):
+    top = y + (h - 27 - len(labels) * 31) / 2 + 22
+    return rect(x, y, w, h) + text(x + w / 2, top, ref, 20, bold=True) + lines(x + w / 2, top + 32, labels, size)
 
-def safety(ja):
-    s=base(734,'05 / SAFETY RESPONSES','環境の変化を検知し、状況に応じて対応する' if ja else 'Detect the change. Select an appropriate response.', '明細書に記載された安全動作と、実装時に定義する条件を対応付けます。' if ja else 'Connect safety behavior described in the specification with conditions to define during implementation.',ja)
-    headers=['検知する状況','原文に記載された動作','実装時に定義する条件'] if ja else ['DETECTED CONDITION','RESPONSE IN THE SOURCE','IMPLEMENTATION CONDITIONS']
-    for x,h in zip([56,454,880],headers):s+=tx(x,182,h,15,MUTED,700)
-    rows=[('obstacle','障害物を検知',['経路を調整','衝突を回避'],['検知距離・回避性能','センサー状態']) ,('signal','通信が途絶',['通信経路の冗長化','帰還または安全な着陸'],['タイムアウト・代替動作','機体側の判断権限']),('battery','電源に異常',['帰還または安全な着陸','実行可能な条件で対応'],['残量の閾値・着陸可能性','完全な電源喪失は別途扱う'])] if ja else [('obstacle','Obstacle detected',['Adjust the flight path','Avoid a collision'],['Detection and avoidance limits','Sensor-health criteria']),('signal','Communication lost',['Redundant communication','Return to base or land safely'],['Timeout and fallback policy','Onboard decision authority']),('battery','Power problem',['Return to base or land safely','Where controlled flight is feasible'],['Energy threshold and landing feasibility','Total power loss needs separate handling'])]
-    for i,(sym,label,response,conditions) in enumerate(rows):
-        y=205+i*145
-        s+=rect(32,y,1216,126)+circle(93,y+60,38,'#eef3f7')+icon(sym,93,y+58,.69,GOLD)
-        s+=tx(149,y+67,label,22,INK,650)+path(f'M381 {y+63} H424',TEAL,2.5,False,True)
-        s+=textlines(454,y+50,response,19,INK)+path(f'M847 {y+22} V{y+104}',BORDER,1.5)
-        s+=textlines(880,y+50,conditions,16,MUTED)
-    s+=rect(32,658,1216,46,'#fbf2e3','#ead8b6',10)+tx(53,687,'応答の選択条件は未指定です。性能保証や飛行安全性の認証を示す図ではありません。' if ja else 'Trigger thresholds are unspecified. These are design responses, without a flight-safety validation claim.',17,GOLD)
-    save('safety-responses',ja,s)
 
-def learning(ja):
-    s=base(727,'06 / OPERATIONAL LEARNING','配送データを、次の改善につなげる' if ja else 'Turn delivery records into a controlled improvement cycle.', '原文のデータ活用と、実装に向けて提案する評価・更新の手順。' if ja else 'Distinguish the specified use of operational data from a proposed evaluation and release process.',ja)
-    s+=rect(32,158,1216,221,'#e9f4f2','#bfdcd8',15)+tx(53,190,'原文の設計' if ja else 'DESCRIBED IN THE SPECIFICATION',15,TEAL,700)
-    xs=[57,464,871]
-    data=[('drone','データの収集',['飛行経路・画像','センサー値']),('database','暗号化して保存',['クラウドデータベース','運用記録を蓄積']),('model','AIの改善に利用',['航行・エネルギー効率','物流計画'])] if ja else [('drone','Collect',['Flight paths and images','Sensor readings']),('database','Store',['Encrypted cloud database','Retained operational records']),('model','Improve',['Navigation and energy efficiency','Logistics planning'])]
-    for x,(sym,title,lines) in zip(xs,data):
-        s+=rect(x,209,351,143)+icon(sym,x+49,257,.63,TEAL)+tx(x+91,253,title,23,INK,650)+textlines(x+22,296,lines,17,MUTED,27)
-        if x!=871:s+=path(f'M{x+355} 282 H{x+396}',TEAL,2.5,False,True)
-    s+=tx(53,426,'実装上の提案' if ja else 'PROPOSED IMPLEMENTATION PROCESS',15,BLUE,700)
-    stages=[('品質確認',['時刻・欠損・出所']),('モデル評価',['シナリオ別に比較']),('更新の承認',['版管理・切り戻し']),('運用監視',['動作の変化を確認'])] if ja else [('Validate data',['Time, gaps, provenance']),('Evaluate model',['Compare across scenarios']),('Approve release',['Version and rollback']),('Monitor',['Review behavior changes'])]
-    for i,(label,lines) in enumerate(stages):
-        x=32+i*311
-        s+=rect(x,451,283,114,'white','#ccd7ed',12)+tx(x+20,484,f'0{i+1}',15,BLUE,700)+tx(x+20,517,label,22,INK,650)+tx(x+20,545,lines[0],15,MUTED)
-        if i<3:s+=path(f'M{x+287} 508 H{x+304}',BLUE,2,True,True)
-    s+=path('M1180 565 V608 H156 V575',BLUE,2,True,True)+rect(407,589,447,37,PALE,PALE,4)+tx(630,614,'運用結果から次の評価へ' if ja else 'Operational results inform the next review',18,BLUE,500,'middle')
-    s+=tx(40,676,'継続的な学習は原文に記載。モデルの更新時期と展開方法は未指定です。' if ja else 'The source describes continuous learning; it does not specify model-update timing or deployment procedures.',16,MUTED)
-    save('learning-cycle',ja,s)
+def sheet(slug, num, title, body, height, lang, notes):
+    desc = ('Explanatory drawing based on the supplied specification. Editorial reference numerals; '
+            'not an original patent-office drawing.' if lang == 'en' else
+            '提供された明細書に基づく説明図。符号は本資料用の整理番号であり、特許庁の原図ではありません。')
+    footer = 'Portfolio explanatory drawing' if lang == 'en' else 'ポートフォリオ用説明図'
+    svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="{height}" '
+           f'viewBox="0 0 1120 {height}" role="img" aria-labelledby="title desc" xml:lang="{lang}">'
+           f'<title id="title">FIG. {num} — {escape(title)}</title><desc id="desc">{escape(desc)}</desc>'
+           '<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">'
+           '<path d="M1 1 L9 5 L1 9" fill="none" stroke="#111" stroke-width="1.3"/></marker>'
+           '<marker id="start" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto">'
+           '<path d="M9 1 L1 5 L9 9" fill="none" stroke="#111" stroke-width="1.3"/></marker></defs>'
+           f'<rect width="1120" height="{height}" fill="white"/>'
+           + text(56, 43, 'AI AGENT / SYSTEM DESIGN', 16, 'start')
+           + text(1064, 43, f'{num} / 6', 16, 'end') + line('M56 60 H1064') + body
+           + lines(56, height - 147, notes, 17, 26, anchor='start')
+           + line(f'M56 {height - 99} H1064')
+           + text(560, height - 61, f'FIG. {num}   {title}', 24, bold=True)
+           + text(560, height - 28, footer, 16) + '</svg>\n')
+    (OUT / f'fig-{num:02d}-{slug}-{lang}.svg').write_text(svg, encoding='utf-8')
+
+
+def architecture(lang):
+    ja = lang == 'ja'
+    s = block(380, 100, 360, 95, '110', ['顧客プラットフォーム' if ja else 'Customer platform'])
+    s += line('M535 195 V273', arrow=True) + line('M585 273 V195', arrow=True)
+    s += text(515, 237, '注文' if ja else 'Order', 18, 'end')
+    s += text(607, 237, '通知' if ja else 'Alert', 18, 'start')
+    s += rect(260, 275, 600, 220)
+    s += text(560, 313, '120  中央AI制御サーバー' if ja else '120  Central AI control server', 23)
+    s += block(285, 340, 245, 125, '121', ['階層型AIエージェント', '割当・運航計画・経路'] if ja else ['Hierarchical AI agents', 'Assignment / routing'], 20)
+    s += block(590, 340, 245, 125, '122', ['ネットワーク型AI', 'エージェント・情報共有'] if ja else ['Network AI agents', 'Coordination / exchange'], 20)
+    s += line('M530 402 H590', both=True) + line('M550 495 V575', both=True)
+    s += block(380, 575, 340, 95, '130', ['衛星通信' if ja else 'Satellite communication'])
+    s += line('M550 670 V750', both=True)
+    s += block(380, 750, 340, 95, '140', ['自律型ドローン群' if ja else 'Autonomous drone fleet'])
+    s += block(65, 750, 235, 95, '170', ['指定受取地点' if ja else 'Delivery point'])
+    s += line('M380 798 H300', arrow=True)
+    s += block(835, 575, 235, 125, '150', ['暗号化クラウドDB', '運用記録'] if ja else ['Encrypted cloud DB', 'Operational records'], 20)
+    s += line('M860 385 H952 V575', arrow=True)
+    s += text(970, 490, '保存' if ja else 'Store', 18, 'start')
+    s += block(835, 750, 235, 95, '160', ['AIの改善' if ja else 'AI improvement'], 21)
+    s += line('M952 700 V750', arrow=True)
+    notes = (['矢印は機能上の情報・配送の流れを示します。ネットワーク配線を指定するものではありません。',
+              'GPS測位は図4に示します。エージェントの物理的な配置は原文では未指定です。'] if ja else
+             ['Arrows show functional exchanges and delivery; they do not prescribe network wiring.',
+              'GPS positioning is shown in Fig. 4. Physical placement of agents is unspecified in the source.'])
+    sheet('system-architecture', 1, 'システム全体構成' if ja else 'System architecture', s, 1090, lang, notes)
+
+
+def coordination(lang):
+    ja = lang == 'ja'
+    xs = [165, 430, 690, 955]
+    labels = ([['顧客', 'プラットフォーム'], ['階層型AI', 'エージェント'], ['ネットワーク型AI', 'エージェント'], ['自律型', 'ドローン']] if ja else
+              [['Customer', 'platform'], ['Hierarchical AI', 'agents'], ['Network AI', 'agents'], ['Autonomous', 'drone']])
+    s = ''
+    for x, ref, label in zip(xs, ['110', '121', '122', '140'], labels):
+        s += block(x - 110, 105, 220, 118, ref, label, 21)
+        s += line(f'M{x} 223 V915', dashed=True)
+    events = [(0, 1, 285, 'Delivery request / destination', '配送要求・目的地'),
+              (1, 2, 365, 'Assignment / route', '機体割当・経路'),
+              (2, 3, 445, 'Mission guidance', '航行指示'),
+              (3, 2, 525, 'Position / status', '位置・機体状態'),
+              (2, 1, 605, 'Coordination data', '調整に必要な情報'),
+              (1, 2, 685, 'Revised guidance', '誘導情報の更新'),
+              (2, 3, 765, 'Guidance update', '更新された誘導情報'),
+              (2, 0, 870, 'Pre-arrival alert (approximately 5 min)', '到着前通知（約5分前）')]
+    for a, b, y, en, jp in events:
+        s += line(f'M{xs[a]} {y} H{xs[b]}', arrow=True)
+        if abs(b - a) > 1:
+            s += f'<rect x="{min(xs[a], xs[b]) + 8}" y="{y-36}" width="{abs(xs[b]-xs[a])-16}" height="27" fill="white"/>'
+        s += text((xs[a] + xs[b]) / 2, y - 13, jp if ja else en, 18)
+    notes = (['概念的な通信順序。飛行中の状態報告と誘導更新は必要に応じて繰り返します。',
+              '通信層は省略しています。API、メッセージ形式、厳密な処理順序は未指定です。'] if ja else
+             ['Illustrative exchange sequence. Status reporting and guidance updates recur during flight.',
+              'Communication transport is omitted. APIs, message formats, and exact ordering are unspecified.'])
+    sheet('agent-coordination', 2, 'AIエージェント間の連携' if ja else 'AI agent coordination', s, 1140, lang, notes)
+
+
+def delivery(lang):
+    ja = lang == 'ja'
+    values = ([['配送要求を受信'], ['配送先を確認', '機体を割り当て、経路を計画'], ['GPS・センサーによる自律航行', 'AIの誘導を継続的に受信'], ['到着前の顧客通知'], ['指定受取地点に配送'], ['運用記録を保存し', 'その後のAI改善に利用']] if ja else
+              [['Receive delivery request'], ['Determine destination', 'Assign drone and plan route'], ['Navigate with GPS and sensors', 'Receive ongoing AI guidance'], ['Notify customer before arrival'], ['Deliver at designated point'], ['Retain operational records', 'Use data for AI improvement']])
+    s = ''
+    for i, value in enumerate(values):
+        y = 95 + i * 134
+        s += block(290, y, 540, 104, f'S{(i + 1) * 10}', value, 22)
+        if i < 5:
+            s += line(f'M560 {y + 104} V{y + 134}', arrow=True)
+    s += line('M830 550 H875')
+    s += lines(886, 541, ['到着の', '約5分前'] if ja else ['Approx. 5 min', 'before arrival'], 18, 26, anchor='start')
+    notes = (['S10〜S60は、本資料で配送手順を参照するための整理番号です。', '通知時刻は原文の目標値であり、実測した配送時間ではありません。'] if ja else
+             ['S10–S60 identify the source delivery steps for this portfolio.', 'The notification interval is a source target; no measured delivery duration is implied.'])
+    sheet('delivery-sequence', 3, '配送手順' if ja else 'Delivery procedure', s, 1065, lang, notes)
+
+
+def drone(lang):
+    ja = lang == 'ja'
+    s = block(360, 100, 400, 100, '120 / 130', ['中央AI制御・衛星通信' if ja else 'AI control / satellite link'])
+    s += rect(110, 270, 900, 540)
+    s += text(155, 311, '140  自律型ドローン' if ja else '140  Autonomous drone', 24, 'start')
+    s += line('M560 200 V345', both=True)
+    s += block(355, 345, 410, 100, '144', ['通信モジュール' if ja else 'Communication modules'])
+    for x, ref, label in [(150, '141', ['GPS測位'] if ja else ['GPS positioning']),
+                           (445, '142', ['物体検知センサー'] if ja else ['Object-detection', 'sensors']),
+                           (740, '143', ['カメラ'] if ja else ['Cameras'])]:
+        s += block(x, 510, 230, 110, ref, label, 20)
+    s += block(355, 680, 410, 90, '145', ['電動推進' if ja else 'Electric propulsion'])
+    notes = (['構成要素を機能別に整理した図です。配置、寸法、配線、制御実装は示していません。', 'GPSは測位、衛星通信は情報交換のための別の機能として表しています。'] if ja else
+             ['Functional component inventory. Placement, dimensions, wiring, and control implementation are unspecified.',
+              'GPS supplies positioning; satellite communication provides a separate information-exchange function.'])
+    sheet('drone-components', 4, 'ドローンの機能構成' if ja else 'Drone functional components', s, 1030, lang, notes)
+
+
+def safety(lang):
+    ja = lang == 'ja'
+    s = rect(100, 110, 920, 75) + text(560, 157, '継続的な監視・通信経路の冗長化' if ja else 'Continuous monitoring / redundant communication links', 24)
+    s += line('M560 185 V240 M215 240 H905 M215 240 V310 M560 240 V310 M905 240 V310')
+    branches = ([(['障害物を検知'], ['飛行経路を', '自動調整'], ['対象：人・車両など', '近傍の障害物']),
+                  (['通信の喪失'], ['基地への帰還', 'または安全な着陸'], ['通信復旧・動作選択の', '条件は実装時に定義']),
+                  (['電源の異常'], ['基地への帰還', 'または安全な着陸'], ['動作の実現可能性は', '残存電力・機体状態による'])] if ja else
+                [(['Obstacle detected'], ['Adjust flight path', 'to avoid obstacle'], ['Examples: nearby', 'people or vehicles']),
+                 (['Communication loss'], ['Return to base', 'or land safely'], ['Recovery and response', 'criteria require definition']),
+                 (['Power failure'], ['Return to base', 'or land safely'], ['Feasibility depends on', 'power and aircraft state'])])
+    for x, ref, (trigger, response, note) in zip([75, 420, 765], ['A', 'B', 'C'], branches):
+        s += block(x, 310, 280, 100, ref, trigger, 21)
+        s += line(f'M{x+140} 410 V490', arrow=True)
+        s += rect(x, 490, 280, 120) + lines(x + 140, 538, response, 22)
+        s += lines(x + 140, 662, note, 18, 27)
+    notes = (['A〜Cは原文の異常シナリオを並列に整理したものです。優先順位は示していません。', '帰還・着陸は記載された目標動作です。完全な電力喪失時の実現を保証するものではありません。'] if ja else
+             ['A–C are separate source scenarios; no priority or response-selection policy is specified.',
+              'Return and landing are intended responses; feasibility after total loss of power is not established.'])
+    sheet('safety-responses', 5, '異常時の応答' if ja else 'Safety response scenarios', s, 940, lang, notes)
+
+
+def learning(lang):
+    ja = lang == 'ja'
+    s = text(300, 122, '明細書に記載された流れ' if ja else 'Flow described in the specification', 22)
+    source = [('140', ['飛行経路・センサー値・画像'] if ja else ['Flight paths / readings / images']),
+              ('150', ['暗号化クラウドDBに保存'] if ja else ['Encrypted cloud storage']),
+              ('160', ['AIによる処理と学習'] if ja else ['AI processing and learning']),
+              ('160', ['航行・エネルギー効率・', '物流計画の改善'] if ja else ['Improve navigation, energy use,', 'and logistics planning'])]
+    for i, (ref, label) in enumerate(source):
+        y = 175 + 160 * i
+        s += block(85, y, 430, 110, ref, label, 21)
+        if i < 3:
+            s += line(f'M300 {y+110} V{y+160}', arrow=True)
+    s += rect(610, 95, 425, 720, dashed=True)
+    s += text(822, 140, '実装上の提案' if ja else 'Proposed implementation controls', 21)
+    proposed = ([['データ品質の検証'], ['候補モデルの評価'], ['更新の承認とバージョン管理'], ['運用監視・ロールバック']] if ja else
+                [['Validate data quality'], ['Evaluate candidate models'], ['Approve and version releases'], ['Monitor / support rollback']])
+    for i, label in enumerate(proposed):
+        y = 200 + 155 * i
+        s += rect(647, y, 350, 90) + lines(822, y + 54, label, 20)
+        if i < 3:
+            s += line(f'M822 {y+90} V{y+155}', arrow=True)
+    notes = (['破線内はシステム設計上の提案であり、明細書の記載事項ではありません。', '原文はモデル配置、学習スケジュール、更新の承認方法を指定していません。'] if ja else
+             ['The dashed enclosure contains portfolio engineering proposals beyond the supplied specification.',
+              'Model placement, training schedules, and release approval are not defined in the source.'])
+    sheet('learning-flow', 6, '運用データとAIの改善' if ja else 'Operational data and AI improvement', s, 1030, lang, notes)
+
 
 if __name__ == '__main__':
     OUT.mkdir(exist_ok=True)
-    for ja in (False,True):
-        context(ja);coordination(ja);safety(ja);learning(ja)
-    print('Generated eight bilingual SVG illustrations.')
+    for language in ('en', 'ja'):
+        for draw in (architecture, coordination, delivery, drone, safety, learning):
+            draw(language)
+    print('Built 12 explanatory SVG drawing sheets.')

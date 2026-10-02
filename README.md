@@ -1,10 +1,14 @@
-# Multi-Agent AI for Autonomous Drone Delivery
+# AI Agent & System Design
+
+**Autonomous Drone Delivery Patent**
 
 **Language:** English | [日本語](japanese-readme.md)
 
 **Granted patent · South Africa · CIPC 2025/09550 · 28 January 2026**
 
-![Illustrative delivery environment connecting a dispatch base, autonomous drone, and urban and rural delivery points](assets/delivery-context-en.svg)
+![FIG. 1 — System architecture with numbered AI agents, communications, drone fleet, and data components](assets/fig-01-system-architecture-en.svg)
+
+*Six technical drawing sheets, available in English and Japanese. [Drawing index and reference numerals](assets/README.md).*
 
 **Visual walkthrough:** [Architecture](#multi-agent-system-architecture) · [Agent coordination](#how-the-agents-coordinate) · [Delivery lifecycle](#delivery-lifecycle) · [Safety and learning](#safety-security-and-learning)
 
@@ -63,8 +67,6 @@ These are design objectives; their operational value requires measurement in a f
 
 ## Multi-agent system architecture
 
-![Fleet coordination, network cooperation, autonomous execution, and operational learning](assets/architecture-en.svg)
-
 The architecture combines a central AI control server with two complementary agent responsibilities:
 
 | Component | Responsibility | Main information handled |
@@ -77,15 +79,24 @@ The architecture combines a central AI control server with two complementary age
 
 The agent categories describe responsibilities. The specification does not define their process placement, communication protocol, or a fully decentralized consensus mechanism. Here, “multi-agent AI” refers to the described autonomous logistics architecture; the source does not specify an LLM framework.
 
+<details>
+<summary><strong>FIG. 4 — Drone functional components</strong></summary>
+
+![GPS, sensors, cameras, communication modules, and electric propulsion within the drone boundary](assets/fig-04-drone-components-en.svg)
+
+Reference numerals 141–145 identify the components described in the specification. This functional inventory leaves physical placement, wiring, and mechanical design unspecified.
+
+</details>
+
 ### How the agents coordinate
 
-![Sequence of delivery requests, assignment, telemetry, guidance updates, and customer notifications](assets/agent-coordination-en.svg)
+![Sequence of delivery requests, assignment, telemetry, guidance updates, and customer notifications](assets/fig-02-agent-coordination-en.svg)
 
 Hierarchical agents determine assignments and routes. Network agents carry coordination information between participants. The drone reports its position and status so guidance can be updated during delivery. This sequence illustrates responsibilities and information flow.
 
 ### Delivery lifecycle
 
-![Six-stage delivery lifecycle](assets/delivery-flow-en.svg)
+![Six-stage delivery lifecycle](assets/fig-03-delivery-sequence-en.svg)
 
 1. **Request:** The customer places an order through the connected delivery platform.
 2. **Assign:** The AI system determines the destination, selects an available drone, and plans the route.
@@ -110,7 +121,7 @@ The [system design analysis](docs/system-design.md) develops these questions as 
 
 ## Safety, security, and learning
 
-![Obstacle, communication, and power scenarios mapped to described responses and implementation conditions](assets/safety-responses-en.svg)
+![Obstacle, communication, and power scenarios mapped to described responses and implementation conditions](assets/fig-05-safety-responses-en.svg)
 
 - **Safety behavior described:** Continuous monitoring, obstacle detection and avoidance, communication redundancy, and return-to-base or safe-landing behavior in response to power or communication problems.
 - **Communication requirements described:** Encryption, authentication, and quantum-resistant cryptographic protocols. The specification does not name algorithms, key-management procedures, or measured security results.
@@ -120,9 +131,9 @@ The [system design analysis](docs/system-design.md) develops these questions as 
 <details>
 <summary><strong>View the operational learning cycle</strong></summary>
 
-![Collection, encrypted storage, and AI improvement, with proposed model evaluation and release controls](assets/learning-cycle-en.svg)
+![Collection, encrypted storage, and AI improvement, with proposed model evaluation and release controls](assets/fig-06-learning-flow-en.svg)
 
-The upper band follows the specification. The lower band proposes data validation, model evaluation, release approval, and monitoring as implementation controls. See the [system design analysis](docs/system-design.md) for the full evaluation plan.
+The left column follows the specification. The dashed enclosure on the right proposes data validation, model evaluation, release approval, and monitoring as implementation controls. See the [system design analysis](docs/system-design.md) for the full evaluation plan.
 
 </details>
 
@@ -156,4 +167,4 @@ The specification identifies medical supply transport, disaster relief logistics
 
 ## Publication scope
 
-This repository presents a technical portfolio based on the supplied specification. Diagrams are explanatory redrawings prepared for this case study. The Japanese documents are portfolio translations. The [patent record](docs/patent-record.md) documents the bibliographic identifiers and the source of each date. No software or patent license is included in this publication.
+This repository presents a technical portfolio based on the supplied specification. The numbered monochrome diagrams are explanatory drawings prepared for this case study, not original filed or issued patent drawings. Their reference numerals are editorial reading aids. The Japanese documents are portfolio translations. The [patent record](docs/patent-record.md) documents the bibliographic identifiers and the source of each date. No software or patent license is included in this publication.

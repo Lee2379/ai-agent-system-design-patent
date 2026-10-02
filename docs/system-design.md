@@ -11,7 +11,7 @@ This document uses two explicit categories:
 - **Source design:** behavior described in the supplied specification.
 - **Implementation consideration:** an engineering proposal for making that behavior concrete. These proposals are portfolio analysis, not additional claims attributed to the original invention.
 
-![Architecture](../assets/architecture-en.svg)
+![Architecture](../assets/fig-01-system-architecture-en.svg)
 
 ## 2. Responsibility boundaries
 
@@ -26,35 +26,9 @@ This document uses two explicit categories:
 
 ## 3. An illustrative interaction sequence
 
-![Agent coordination sequence](../assets/agent-coordination-en.svg)
+![Agent coordination sequence](../assets/fig-02-agent-coordination-en.svg)
 
-The following diagram expands the source's delivery sequence. It is a conceptual view; it does not prescribe an API or establish the physical deployment location of an agent.
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Customer
-    participant Platform as Delivery platform
-    participant Fleet as Hierarchical AI agents
-    participant Network as Network AI agents
-    participant Drone as Autonomous drone
-    participant Data as Operational data store
-    Customer->>Platform: Place delivery order
-    Platform->>Fleet: Delivery request and destination
-    Fleet->>Network: Drone assignment and route guidance
-    Network->>Drone: Mission information via communication layer
-    loop During flight
-        Drone->>Network: Position and operational status
-        Network->>Fleet: Coordination information
-        Fleet->>Network: Updated guidance when needed
-        Network->>Drone: Guidance update
-    end
-    Network->>Platform: Pre-arrival notification
-    Platform->>Customer: Alert approximately five minutes before arrival
-    Drone->>Customer: Parcel at designated delivery point
-    Drone->>Data: Operational records through communication layer
-    Data-->>Fleet: Data for subsequent AI improvement
-```
+Figure 2 expands the source's delivery sequence. It is a conceptual view; it does not prescribe an API or establish the physical deployment location of an agent.
 
 Actual storage ingestion and the component that calculates ETA are unspecified in the source. The diagram groups these interactions for readability.
 
@@ -74,7 +48,7 @@ Time sources, coordinate reference systems, units, access control, and schema ev
 
 ## 5. Failure handling
 
-![Safety responses and implementation conditions](../assets/safety-responses-en.svg)
+![Safety responses and implementation conditions](../assets/fig-05-safety-responses-en.svg)
 
 The source names communication redundancy, obstacle avoidance, monitoring, return to base, and safe landing. Implementation must define the conditions under which each response is feasible.
 
@@ -105,7 +79,7 @@ The specification does not identify a cryptographic suite, a tested threat model
 
 ## 7. Learning lifecycle
 
-![Operational learning cycle](../assets/learning-cycle-en.svg)
+![Operational learning cycle](../assets/fig-06-learning-flow-en.svg)
 
 **Source design:** collect operational data, store it, and use it to improve navigation, energy efficiency, and predictive logistics planning.
 
