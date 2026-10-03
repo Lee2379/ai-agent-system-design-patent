@@ -1,6 +1,6 @@
 """Build bilingual explanatory drawings with Python's standard library.
 
-Reference numerals are editorial aids, not numbers from filed patent drawings.
+Shared reference numbers identify components across all six figures.
 The figures describe functional relationships, not mechanical construction.
 """
 from html import escape
@@ -39,10 +39,10 @@ def block(x, y, w, h, ref, labels, size=22):
 
 
 def sheet(slug, num, title, body, height, lang, notes):
-    desc = ('Explanatory drawing based on the supplied specification. Editorial reference numerals; '
+    desc = ('System drawing based on the patent specification. Reference numbers match the drawing index; '
             'not an original patent-office drawing.' if lang == 'en' else
-            '提供された明細書に基づく説明図。符号は本資料用の整理番号であり、特許庁の原図ではありません。')
-    footer = 'Portfolio explanatory drawing' if lang == 'en' else 'ポートフォリオ用説明図'
+            '特許明細書に基づく説明図。構成要素番号は図面一覧に対応しています。')
+    footer = 'System design drawing' if lang == 'en' else 'システム説明図'
     svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="{height}" '
            f'viewBox="0 0 1120 {height}" role="img" aria-labelledby="title desc" xml:lang="{lang}">'
            f'<title id="title">FIG. {num} — {escape(title)}</title><desc id="desc">{escape(desc)}</desc>'
@@ -82,9 +82,9 @@ def architecture(lang):
     s += block(835, 750, 235, 95, '160', ['AIの改善' if ja else 'AI improvement'], 21)
     s += line('M952 700 V750', arrow=True)
     notes = (['矢印は機能上の情報・配送の流れを示します。ネットワーク配線を指定するものではありません。',
-              'GPS測位は図4に示します。エージェントの物理的な配置は原文では未指定です。'] if ja else
+              'GPS測位は図4に示します。エージェントの配置は実装時に具体化します。'] if ja else
              ['Arrows show functional exchanges and delivery; they do not prescribe network wiring.',
-              'GPS positioning is shown in Fig. 4. Physical placement of agents is unspecified in the source.'])
+              'GPS positioning is shown in Fig. 4. Agent deployment is an implementation decision.'])
     sheet('system-architecture', 1, 'システム全体構成' if ja else 'System architecture', s, 1090, lang, notes)
 
 
@@ -129,8 +129,8 @@ def delivery(lang):
             s += line(f'M560 {y + 104} V{y + 134}', arrow=True)
     s += line('M830 550 H875')
     s += lines(886, 541, ['到着の', '約5分前'] if ja else ['Approx. 5 min', 'before arrival'], 18, 26, anchor='start')
-    notes = (['S10〜S60は、本資料で配送手順を参照するための整理番号です。', '通知時刻は原文の目標値であり、実測した配送時間ではありません。'] if ja else
-             ['S10–S60 identify the source delivery steps for this portfolio.', 'The notification interval is a source target; no measured delivery duration is implied.'])
+    notes = (['S10〜S60は、注文から学習までの配送手順を示します。', '到着の約5分前に通知し、顧客が受け取りを準備できるようにします。'] if ja else
+             ['S10–S60 follow the delivery from the initial request through to learning.', 'The alert is intended to give the customer approximately five minutes to prepare.'])
     sheet('delivery-sequence', 3, '配送手順' if ja else 'Delivery procedure', s, 1065, lang, notes)
 
 
@@ -167,15 +167,15 @@ def safety(lang):
         s += line(f'M{x+140} 410 V490', arrow=True)
         s += rect(x, 490, 280, 120) + lines(x + 140, 538, response, 22)
         s += lines(x + 140, 662, note, 18, 27)
-    notes = (['A〜Cは原文の異常シナリオを並列に整理したものです。優先順位は示していません。', '帰還・着陸は記載された目標動作です。完全な電力喪失時の実現を保証するものではありません。'] if ja else
-             ['A–C are separate source scenarios; no priority or response-selection policy is specified.',
-              'Return and landing are intended responses; feasibility after total loss of power is not established.'])
+    notes = (['A〜Cは独立した異常シナリオです。応答の選択条件は実装時に定めます。', '帰還・着陸には十分な電力と機体制御が必要です。完全な電力喪失への対策は別途検討します。'] if ja else
+             ['A–C are independent scenarios. Response-selection criteria need to be defined during implementation.',
+              'Return and landing require sufficient power and control. Total power loss needs separate handling.'])
     sheet('safety-responses', 5, '異常時の応答' if ja else 'Safety response scenarios', s, 940, lang, notes)
 
 
 def learning(lang):
     ja = lang == 'ja'
-    s = text(300, 122, '明細書に記載された流れ' if ja else 'Flow described in the specification', 22)
+    s = text(300, 122, '配送データの活用' if ja else 'Delivery data and learning', 22)
     source = [('140', ['飛行経路・センサー値・画像'] if ja else ['Flight paths / readings / images']),
               ('150', ['暗号化クラウドDBに保存'] if ja else ['Encrypted cloud storage']),
               ('160', ['AIによる処理と学習'] if ja else ['AI processing and learning']),
@@ -194,9 +194,9 @@ def learning(lang):
         s += rect(647, y, 350, 90) + lines(822, y + 54, label, 20)
         if i < 3:
             s += line(f'M822 {y+90} V{y+155}', arrow=True)
-    notes = (['破線内はシステム設計上の提案であり、明細書の記載事項ではありません。', '原文はモデル配置、学習スケジュール、更新の承認方法を指定していません。'] if ja else
-             ['The dashed enclosure contains portfolio engineering proposals beyond the supplied specification.',
-              'Model placement, training schedules, and release approval are not defined in the source.'])
+    notes = (['破線内は、実装に向けたモデル検証・更新手順の案です。', 'モデルの配置、学習スケジュール、承認方法は詳細設計で具体化します。'] if ja else
+             ['The dashed enclosure shows a proposed process for model validation and release.',
+              'Model placement, training schedules, and approval rules require detailed design.'])
     sheet('learning-flow', 6, '運用データとAIの改善' if ja else 'Operational data and AI improvement', s, 1030, lang, notes)
 
 

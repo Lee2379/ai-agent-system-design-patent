@@ -2,13 +2,9 @@
 
 [English portfolio](../README.md) · [日本語ポートフォリオ](../japanese-readme.md)
 
-Six monochrome drawing sheets explain the architecture, agent responsibilities, and operating procedures. Each sheet uses consistent line weights, orthogonal connections, and reference numerals, with a matching Japanese version.
+I created these six figures to explain the system architecture and operation, using the same component numbers in English and Japanese. They are explanatory drawings based on the [specification](../source/specification.txt), separate from the official patent drawings. The dashed section in Figure 6 shows a proposed model validation and release process.
 
-These are portfolio explanatory drawings based on the [provided specification](../source/specification.txt). They are **not original filed or issued patent drawings**. The layout and reference numerals were created for this portfolio. Dashed enclosures in Figure 6 identify additional implementation proposals.
-
-全6種の白黒図面で、構成、エージェントの役割、運用手順を説明します。線の太さ、直交する接続線、構成要素の符号を統一し、英語版と日本語版を用意しています。
-
-図は[提供された明細書](../source/specification.txt)に基づくポートフォリオ用説明図であり、**出願時または登録時の原図ではありません**。配置と符号は本資料用に作成したものです。図6の破線内は、実装に向けた追加の提案を示します。
+システムの構成と動作を説明するため、英語・日本語で6種の図を作成しました。両言語で共通の構成要素番号を使っています。[明細書](../source/specification.txt)に基づく説明図で、正式な特許図面とは別のものです。図6の破線内には、モデルの検証と更新の手順案を示しています。
 
 | Figure / 図 | Subject / 内容 | English | 日本語 |
 |---|---|---|---|
@@ -38,9 +34,9 @@ These are portfolio explanatory drawings based on the [provided specification](.
 | 160 | AI improvement | AIの改善 |
 | 170 | Designated delivery point | 指定受取地点 |
 
-S10–S60 identify delivery steps. A–C identify separate safety scenarios. Neither notation is an original claim identifier.
+S10–S60 mark the delivery steps; A–C mark the safety scenarios.
 
-S10〜S60は配送手順、A〜Cは独立した異常シナリオを表します。いずれも元の請求項番号ではありません。
+S10〜S60は配送手順、A〜Cは異常時のシナリオを表します。
 
 ## Rebuild / 再生成
 
@@ -52,6 +48,6 @@ All 12 SVGs are generated using Python 3 and its standard library:
 python scripts/build_visuals.py
 ```
 
-The SVGs contain editable text, accessibility titles, and descriptions. They have no external resources, embedded screenshots, or personal names.
+The SVG files use editable text and include accessible titles and descriptions. No external resources are required.
 
-SVGには編集可能な文字、アクセシビリティ用のタイトルと説明を含めています。外部リソース、埋め込みスクリーンショット、個人の氏名は含めていません。
+SVGの文字は編集可能です。アクセシビリティ用のタイトルと説明を含み、外部リソースを使わずに表示できます。

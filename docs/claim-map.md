@@ -2,13 +2,13 @@
 
 [Portfolio](../README.md) · English | [日本語](claim-map.ja.md)
 
-## Reading this map
+## Claims and design
 
-The [provided specification](../source/specification.txt) includes a base-system statement followed by four statements referring to “claim 1.” C1–C5 below are editorial labels for those five statements. This map summarizes technical correspondence in that supplied text; it does not establish the wording or scope of an issued patent.
+I use C1–C5 to refer to the five claim statements in the [specification](../source/specification.txt). The table links each statement to the relevant design elements. It is a technical summary; the patent documents define the claims.
 
-## Claims in the supplied text
+## Claim summary
 
-| Label | Supplied subject, paraphrased | Supporting description | Portfolio representation |
+| Label | Subject | Supporting description | Design element |
 |---|---|---|---|
 | **C1** | One or more drones with GPS, sensors, and communication modules; AI agents manage autonomous delivery using satellite communication | Summary of the Invention; Detailed Description → System Architecture and Communication Framework | AI control system, communication layer, and autonomous drone fleet |
 | **C2** | Hierarchical agents coordinate drone scheduling and routing | Summary of the Invention; System Architecture; AI Agent Operation | Hierarchical-agent responsibility table and route/assignment stage |
@@ -18,23 +18,17 @@ The [provided specification](../source/specification.txt) includes a base-system
 
 ## Description details beyond the five claim summaries
 
-The distinction below keeps the technical explanation aligned with the source.
+The detailed description also covers the following features.
 
 | Feature | Where described | How it is presented here |
 |---|---|---|
-| Camera images and encrypted cloud storage | System Architecture; Learning and Optimization | Described data collection and storage design |
-| Deep learning for routing and obstacle avoidance | AI Agent Operation | Described AI approach, with architecture and training procedure unspecified |
-| Encrypted, authenticated, quantum-resistant communication | Communication Framework | Security requirements in the description; no implemented suite or validation asserted |
-| Redundant communication and emergency return/landing | Safety Considerations | Described safety behavior with implementation questions |
-| Ground-level zones or designated windows | System Operation, step 5 | Example delivery points; no release mechanism assumed |
+| Camera images and encrypted cloud storage | System Architecture; Learning and Optimization | Data collection and storage |
+| Deep learning for routing and obstacle avoidance | AI Agent Operation | Deep learning; model architecture and training procedures remain to be defined |
+| Encrypted, authenticated, quantum-resistant communication | Communication Framework | Security requirements; protocol selection and testing remain implementation work |
+| Redundant communication and emergency return/landing | Safety Considerations | Safety behavior and conditions to resolve during implementation |
+| Ground-level zones or designated windows | System Operation, step 5 | Delivery-point options; parcel release requires detailed design |
 | Medical logistics, disaster response, and air taxis | Applications and Extensions | Proposed application directions |
 
-## Source boundaries
+## Related documents
 
-- The portfolio title is descriptive. The official invention title and bibliographic identifiers are linked in the [patent record](patent-record.md).
-- The specification attachment contains technical text; bibliographic information comes from the separately provided patent reference and the live Google Patents record.
-- The attachment has no patent drawings, prototype results, flight logs, executable code, or measured performance tables.
-- Architecture diagrams and implementation considerations were prepared for this portfolio and are identified as explanatory material.
-- The original supplied text remains unchanged in `source/specification.txt`; English editing and Japanese translation apply to the portfolio documents.
-
-See the [patent record](patent-record.md) for provenance and bibliographic references.
+The [system design analysis](system-design.md) explores implementation choices and evaluation methods beyond the patent description. The [patent details](patent-record.md) list the registration information and supporting files.

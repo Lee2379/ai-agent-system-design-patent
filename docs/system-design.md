@@ -4,18 +4,15 @@
 
 ## 1. Architectural intent
 
-The supplied specification connects fleet-level scheduling with autonomous execution and continuous information exchange. Its organizing decision is the division between **hierarchical agents**, which coordinate the fleet, and **network agents**, which coordinate communication. GPS, onboard sensing, and satellite communication provide the information and connectivity used by the delivery workflow.
+I designed the system around two responsibilities: **hierarchical agents** coordinate the fleet, and **network agents** coordinate communication. GPS and onboard sensors support navigation, while satellite communication connects drones with the control system.
 
-This document uses two explicit categories:
-
-- **Source design:** behavior described in the supplied specification.
-- **Implementation consideration:** an engineering proposal for making that behavior concrete. These proposals are portfolio analysis, not additional claims attributed to the original invention.
+The tables distinguish the design in the patent from the engineering work needed to implement it. I also outline data structures, failure handling, and tests that I would use in a future implementation.
 
 ![Architecture](../assets/fig-01-system-architecture-en.svg)
 
 ## 2. Responsibility boundaries
 
-| Boundary | Source design | Implementation consideration |
+| Boundary | Patent design | Implementation proposal |
 |---|---|---|
 | Platform → AI control | Receive orders and determine the customer location | Validate the destination and delivery-point eligibility before assignment; define when location updates may change a mission |
 | Hierarchical agents → drone fleet | Select drones, schedule work, and optimize routes | Maintain one authoritative active assignment per drone and version route changes |
@@ -24,23 +21,23 @@ This document uses two explicit categories:
 | AI control → customer | Send a pre-arrival alert | Define ETA refresh, retry, deduplication, and delivery receipt for notifications |
 | Operations → learning | Retain paths, images, and sensor readings for improvement | Validate datasets and candidate models before deploying an updated model |
 
-## 3. An illustrative interaction sequence
+## 3. Agent coordination
 
 ![Agent coordination sequence](../assets/fig-02-agent-coordination-en.svg)
 
-Figure 2 expands the source's delivery sequence. It is a conceptual view; it does not prescribe an API or establish the physical deployment location of an agent.
+The platform sends the request and destination to the hierarchical agents. Network agents relay the mission to the drone, carry position and status updates back, and deliver revised guidance. Before arrival, the customer receives an alert.
 
-Actual storage ingestion and the component that calculates ETA are unspecified in the source. The diagram groups these interactions for readability.
+This sequence defines the responsibilities and exchanges. API design, storage ingestion, and ownership of the arrival-time calculation remain implementation decisions.
 
-## 4. Proposed information contracts
+## 4. Proposed data structures
 
-These example fields are implementation considerations, provided to make the architectural boundaries reviewable. They are not a shipped API.
+I would use the following records to connect orders, missions, telemetry, and delivery outcomes. These are proposed fields for implementation.
 
 | Record | Example fields | Reason |
 |---|---|---|
 | Delivery request | `request_id`, `destination`, `delivery_point_id` | Correlate an order with an intended handoff location |
 | Mission assignment | `mission_id`, `drone_id`, `route_version`, `issued_at` | Identify the active mission and reject an obsolete route |
-| Telemetry | `mission_id`, `observed_at`, `position`, `battery_state`, `sensor_health` | Assess freshness and the machine's ability to continue |
+| Telemetry | `mission_id`, `observed_at`, `position`, `battery_state`, `sensor_health` | Check data freshness and the drone's ability to continue |
 | Arrival notification | `mission_id`, `eta`, `notification_id`, `sent_at` | Avoid duplicated alerts and evaluate timing |
 | Delivery record | `mission_id`, `outcome`, `completed_at`, `data_references` | Link the operational outcome to retained evidence |
 
@@ -50,9 +47,9 @@ Time sources, coordinate reference systems, units, access control, and schema ev
 
 ![Safety responses and implementation conditions](../assets/fig-05-safety-responses-en.svg)
 
-The source names communication redundancy, obstacle avoidance, monitoring, return to base, and safe landing. Implementation must define the conditions under which each response is feasible.
+The safety design combines redundant communication, obstacle avoidance, continuous monitoring, and return or landing procedures. Each response needs operating limits and clear activation conditions.
 
-| Scenario | Source connection | Implementation consideration | Evidence to collect |
+| Scenario | Design basis | Implementation proposal | Test records |
 |---|---|---|---|
 | Communication interruption | Redundant links; return or safe landing | Use a bounded communication timeout and a defined local fallback policy | Simulated link-loss timeline, chosen response, recovery behavior |
 | Obstacle detected | Sensors and automatic route adjustment | Define minimum detection and avoidance performance for the intended environment | Scenario coverage, intervention count, avoidance outcome |
@@ -61,13 +58,13 @@ The source names communication redundancy, obstacle avoidance, monitoring, retur
 | Stale or duplicated command | Continuous coordination | Version assignments and make repeated messages safe to process | Message replay and out-of-order tests |
 | Delivery point unavailable | Predefined drop-off location | Define handoff confirmation and an abort or alternate-site procedure | Delivery-point rejection and recovery cases |
 
-The last two rows expand questions left open in the specification. No flight-safety validation results are included in the supplied material.
+Handling stale commands and unavailable delivery points requires additional procedures beyond the patent description. The table sets out the tests needed to evaluate them.
 
 ## 6. Security and operational data
 
-**Source design:** encrypted and authenticated satellite communication, quantum-resistant cryptographic protocols, and encrypted cloud storage for images, sensor readings, and flight paths.
+The design calls for encrypted and authenticated satellite communication, quantum-resistant cryptographic protocols, and encrypted storage of images, sensor readings, and flight paths.
 
-**Implementation considerations:**
+**Work needed for implementation:**
 
 - Identify authenticated endpoints, manage device keys, and define revocation and rotation.
 - Select concrete cryptographic protocols and assess their computational and communication cost on the drone platform.
@@ -75,15 +72,13 @@ The last two rows expand questions left open in the specification. No flight-saf
 - Limit access to customer locations and camera data, and set retention and deletion rules.
 - Record dataset and model versions so a change in navigation behavior can be traced to its inputs.
 
-The specification does not identify a cryptographic suite, a tested threat model, or positioning-integrity mechanisms. Its security language is treated here as a set of design requirements.
+These requirements need a concrete protocol suite, a threat model, and tests for positioning integrity before deployment.
 
 ## 7. Learning lifecycle
 
 ![Operational learning cycle](../assets/fig-06-learning-flow-en.svg)
 
-**Source design:** collect operational data, store it, and use it to improve navigation, energy efficiency, and predictive logistics planning.
-
-**Proposed implementation sequence:**
+Flight data feeds back into navigation, energy management, and logistics planning. I would put validation and release checks between model training and deployment:
 
 1. Associate flight records with mission outcomes and sensor-health context.
 2. Validate timestamps, missing observations, labels, and data provenance.
@@ -91,11 +86,11 @@ The specification does not identify a cryptographic suite, a tested threat model
 4. Evaluate a candidate model against route, energy, and safety criteria.
 5. Release approved versions with a rollback path and monitor subsequent behavior.
 
-The source describes continuous learning but does not specify when or how updated models are deployed. This proposal makes that missing release boundary explicit.
+This proposed release process would allow models to improve from delivery data while keeping updates reviewable and reversible.
 
 ## 8. Evaluation plan
 
-The following is a proposed evaluation plan. Baselines, thresholds, datasets, and results have not been supplied.
+I would start with scenario-based simulation, then move to controlled flight trials. The table defines the proposed measures; baselines, acceptance thresholds, and datasets still need to be established.
 
 | Question | Proposed measure | Evaluation approach |
 |---|---|---|
@@ -107,8 +102,8 @@ The following is a proposed evaluation plan. Baselines, thresholds, datasets, an
 | Are safety responses consistent? | Correct response rate per predefined fault scenario | Review fault-injection traces against explicit acceptance criteria |
 | Are cost and emissions goals supported? | Cost / completed delivery; energy and emissions accounting under stated assumptions | Compare like-for-like routes, payloads, and service conditions |
 
-No benchmark score is implied by inclusion in this plan. The source's cost reduction, delivery-fee elimination, and environmental benefits are aspirations that require operating and business evidence.
+Cost and environmental benefits need comparison under equivalent routes, payloads, and service conditions. The measures above are an evaluation plan, with results to be established through testing.
 
 ## 9. Design contribution
 
-The case study demonstrates how a logistics problem can be expressed as interacting system responsibilities: fleet decisions, information exchange, autonomous execution, customer communication, and a data-improvement cycle. The contribution documented here is the invention and its system-level specification, with traceable links to the provided claims and description.
+My contribution was to define how fleet decisions, drone operation, customer communication, and learning fit together in one delivery system. I developed the invention and wrote the system specification, including agent responsibilities, operating procedures, and safety requirements.

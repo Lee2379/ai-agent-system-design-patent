@@ -4,7 +4,7 @@
 
 **Language:** English | [日本語](japanese-readme.md)
 
-**Granted patent · South Africa · CIPC 2025/09550 · 28 January 2026**
+**Granted patent · CIPC 2025/09550 · 28 January 2026**
 
 ![FIG. 1 — System architecture with numbered AI agents, communications, drone fleet, and data components](assets/fig-01-system-architecture-en.svg)
 
@@ -12,15 +12,15 @@
 
 **Visual walkthrough:** [Architecture](#multi-agent-system-architecture) · [Agent coordination](#how-the-agents-coordinate) · [Delivery lifecycle](#delivery-lifecycle) · [Safety and learning](#safety-security-and-learning)
 
-## Project summary
+## About this project
 
-- **Problem:** Delivery across dense cities, mountainous areas, and dispersed communities requires fleet coordination, changing route decisions, reliable communication, and a clear customer handoff.
-- **What I designed:** An autonomous drone delivery system combining hierarchical AI agents for fleet scheduling and routing, network AI agents for coordination and information exchange, and drones equipped with GPS, sensors, cameras, and communication modules.
-- **Outcome:** Granted patent **ZA202509550B**, connecting multi-agent AI, autonomous navigation, customer notifications, and operational data reuse into one system design. Published on **28 January 2026**; see the [patent record](docs/patent-record.md).
-- **My role:** I developed the invention and authored the patent specification, defining the agent responsibilities, delivery workflow, communications requirements, safety behavior, and potential extensions.
-- **Review:** Start with the architecture below, then inspect the [design analysis](docs/system-design.md), [claim-to-design map](docs/claim-map.md), and [provided specification](source/specification.txt).
+I designed a multi-agent AI system for autonomous drone delivery and wrote the patent specification. The patent was granted by **CIPC** on **28 January 2026**, with publication number **ZA202509550B**.
 
-**Portfolio focus:** Multi-agent architecture · autonomous systems · system design · invention development · technical writing
+The design separates fleet scheduling and routing from communication between drones, the control center, and customers. It brings these responsibilities together with autonomous navigation, arrival notifications, and the reuse of flight data for AI improvement.
+
+My work covered the system architecture, agent responsibilities, delivery workflow, communications requirements, and safety behavior. This repository documents that design, with a [technical analysis](docs/system-design.md), [claim map](docs/claim-map.md), and the [patent specification](source/specification.txt).
+
+**Areas of focus:** Multi-agent AI · system design · autonomous systems · technical writing
 
 ## Granted patent
 
@@ -28,12 +28,12 @@
 
 | Patent information | Record |
 |---|---|
-| Office / jurisdiction | CIPC · South Africa |
+| Patent office | CIPC |
 | Patent number | 2025/09550 |
 | Publication number | ZA202509550B |
 | Filing / priority date | 11 November 2025 |
-| Grant / registration date | 28 January 2026|
-| Publication date | 28 January 2026, indexed by Google Patents |
+| Grant / registration date | 28 January 2026 |
+| Publication date | 28 January 2026 |
 
 ## Invention at a glance
 
@@ -48,11 +48,11 @@
 | Data lifecycle | Flight paths, sensor readings, and images stored for subsequent AI improvement |
 | Published material | Technical case study, architecture diagrams, source specification, and claim mapping |
 
-The supplied material describes the invention and its intended behavior. Flight trials, deployed software, and measured cost or emissions results are outside the evidence supplied for this portfolio.
+This is a patent and system design project. The evaluation plan sets out how to test a future implementation; flight-test results and performance benchmarks are not included.
 
 ## Problem and design objectives
 
-The specification frames logistics as a coordination problem across three environments: dense urban areas, mountainous or rural communities, and geographically dispersed delivery destinations. A useful system must connect decisions at fleet level with conditions encountered by an individual drone.
+I approached delivery as a coordination problem: a fleet-wide plan has to adapt to the conditions each drone encounters. Dense cities, mountainous terrain, and dispersed destinations make that connection especially important.
 
 | Design objective | Mechanism in the specification | Intended value |
 |---|---|---|
@@ -63,7 +63,7 @@ The specification frames logistics as a coordination problem across three enviro
 | Extend delivery access | Autonomous electric drones and designated delivery points | Service options for difficult-to-reach locations |
 | Improve future operations | Retain operational data for learning and optimization | Better-informed navigation and logistics planning |
 
-These are design objectives; their operational value requires measurement in a future implementation.
+The [evaluation plan](docs/system-design.md#8-evaluation-plan) describes how I would assess these objectives.
 
 ## Multi-agent system architecture
 
@@ -77,14 +77,14 @@ The architecture combines a central AI control server with two complementary age
 | **Customer platform** | Accept orders and deliver text/app alerts | Delivery requests, destination information, and arrival notifications |
 | **Operational data store** | Retain delivery information in an encrypted cloud database for AI improvement | Flight paths, sensor readings, and images |
 
-The agent categories describe responsibilities. The specification does not define their process placement, communication protocol, or a fully decentralized consensus mechanism. Here, “multi-agent AI” refers to the described autonomous logistics architecture; the source does not specify an LLM framework.
+I separated the agents by responsibility: hierarchical agents make fleet decisions, while network agents handle information exchange. Process placement and communication protocols remain implementation decisions.
 
 <details>
 <summary><strong>FIG. 4 — Drone functional components</strong></summary>
 
 ![GPS, sensors, cameras, communication modules, and electric propulsion within the drone boundary](assets/fig-04-drone-components-en.svg)
 
-Reference numerals 141–145 identify the components described in the specification. This functional inventory leaves physical placement, wiring, and mechanical design unspecified.
+Components 141–145 cover positioning, sensing, communication, and propulsion. The drawing shows their functions; detailed hardware design is a separate implementation step.
 
 </details>
 
@@ -105,7 +105,7 @@ Hierarchical agents determine assignments and routes. Network agents carry coord
 5. **Deliver:** The parcel is received at a predefined delivery point, such as a designated ground-level zone or window.
 6. **Learn:** Flight paths, sensor data, and images are retained for later improvements to navigation, energy efficiency, and logistics planning.
 
-The five-minute interval is an arrival-notification target in the specification, rather than a measured delivery duration. Physical release and recipient-verification mechanisms are not specified.
+The alert is intended to give the customer about five minutes to prepare. Parcel release and recipient verification still need detailed design.
 
 ## System design decisions and trade-offs
 
@@ -117,29 +117,29 @@ The five-minute interval is an arrival-notification target in the specification,
 | Reuse delivery data | Connects operations with subsequent model improvement | How are data quality, model validation, and release control managed? |
 | Define designated delivery points | Connects navigation with the customer handoff | How is a safe delivery point confirmed before parcel release? |
 
-The [system design analysis](docs/system-design.md) develops these questions as implementation considerations, with explicit separation from the supplied invention text.
+I explore these implementation questions in the [system design analysis](docs/system-design.md).
 
 ## Safety, security, and learning
 
 ![Obstacle, communication, and power scenarios mapped to described responses and implementation conditions](assets/fig-05-safety-responses-en.svg)
 
-- **Safety behavior described:** Continuous monitoring, obstacle detection and avoidance, communication redundancy, and return-to-base or safe-landing behavior in response to power or communication problems.
-- **Communication requirements described:** Encryption, authentication, and quantum-resistant cryptographic protocols. The specification does not name algorithms, key-management procedures, or measured security results.
-- **Data lifecycle described:** Images, sensor readings, and flight paths are stored in an encrypted cloud database and reused for AI improvement.
-- **Evaluation priorities:** Delivery completion, route adaptation, alert timing, energy per successful delivery, communication recovery, and safety responses. The detailed document proposes how to assess these without inventing benchmark values.
+- **Safety:** Continuous monitoring, obstacle detection and avoidance, communication redundancy, and return-to-base or safe-landing behavior in response to power or communication problems.
+- **Communication:** Encryption, authentication, and quantum-resistant cryptographic protocols. Protocol selection, key management, and security testing are implementation work.
+- **Data:** Images, sensor readings, and flight paths are stored in an encrypted cloud database and reused for AI improvement.
+- **Evaluation priorities:** Delivery completion, route adaptation, alert timing, energy per successful delivery, communication recovery, and safety responses. The [evaluation plan](docs/system-design.md#8-evaluation-plan) defines the proposed measures and test scenarios.
 
 <details>
 <summary><strong>View the operational learning cycle</strong></summary>
 
 ![Collection, encrypted storage, and AI improvement, with proposed model evaluation and release controls](assets/fig-06-learning-flow-en.svg)
 
-The left column follows the specification. The dashed enclosure on the right proposes data validation, model evaluation, release approval, and monitoring as implementation controls. See the [system design analysis](docs/system-design.md) for the full evaluation plan.
+The left column shows how delivery data supports AI improvement. On the right, I outline a proposed process for validating data, evaluating models, approving updates, and monitoring their behavior. See the [system design analysis](docs/system-design.md) for details.
 
 </details>
 
 ## Patent claims and technical traceability
 
-The supplied claims describe a base system and four dependent statements. The labels below are editorial reading aids; the original text is preserved in the source file.
+The claims cover the delivery system and four supporting features. C1–C5 below are short references to the corresponding statements in the [specification](source/specification.txt).
 
 | Claim label | Subject | Architecture element |
 |---|---|---|
@@ -149,11 +149,11 @@ The supplied claims describe a base system and four dependent statements. The la
 | C4 | Automatic alert before arrival | Customer notification workflow |
 | C5 | Operational data reused for improvements; electric-powered drones | Learning lifecycle and drone platform |
 
-See the [full mapping](docs/claim-map.md) for source sections and for design features that appear in the description but are not separately stated in these five claim statements.
+The [claim map](docs/claim-map.md) links each feature to its section in the specification.
 
 ## Applications and extensions
 
-The specification identifies medical supply transport, disaster relief logistics, and future intelligent transportation systems, including air taxis, as potential extensions. These are application directions proposed in the source. Each would require its own operating requirements and validation.
+I also considered medical supply delivery, disaster relief logistics, and future transportation systems such as air taxis. These applications would need separate operating requirements and validation.
 
 ## Documentation
 
@@ -162,9 +162,11 @@ The specification identifies medical supply transport, disaster relief logistics
 | Portfolio overview | This page | [概要](japanese-readme.md) |
 | System design and evaluation plan | [System design](docs/system-design.md) | [システム設計](docs/system-design.ja.md) |
 | Claim-to-design mapping | [Claim map](docs/claim-map.md) | [請求項と設計の対応](docs/claim-map.ja.md) |
-| Patent record and source provenance | [Patent record](docs/patent-record.md) | [特許情報](docs/patent-record.ja.md) |
-| Provided specification | [Original English text](source/specification.txt) | 英語原文を参照 |
+| Patent details | [Patent record](docs/patent-record.md) | [特許情報](docs/patent-record.ja.md) |
+| Patent specification | [Original English text](source/specification.txt) | 英語原文を参照 |
 
-## Publication scope
+## About the drawings
 
-This repository presents a technical portfolio based on the supplied specification. The numbered monochrome diagrams are explanatory drawings prepared for this case study, not original filed or issued patent drawings. Their reference numerals are editorial reading aids. The Japanese documents are portfolio translations. The [patent record](docs/patent-record.md) documents the bibliographic identifiers and the source of each date. No software or patent license is included in this publication.
+I created these diagrams to explain the system and its workflows. They are explanatory drawings, separate from the official patent documents. The [drawing index](assets/README.md) lists all six figures and their reference numbers.
+
+No software or patent license is granted through this repository.
